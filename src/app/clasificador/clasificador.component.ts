@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 
+import { ClasificadorService } from "src/app/clasificador.service.js";
+
+
 @Component({
   selector: 'app-clasificador',
   templateUrl: './clasificador.component.html',
@@ -7,9 +10,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ClasificadorComponent implements OnInit {
 
-  constructor() { }
+  constructor(public clasificadorService: ClasificadorService) { }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
+
+  
 
 }
