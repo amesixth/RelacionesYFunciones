@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { ClasificadorService } from './clasificador.service';
+import { ClasificadorService } from '../clasificador.service';
 import { Relacion } from './relacion';
 import { Par } from './par';
 
@@ -19,8 +19,8 @@ export class ClasificadorComponent implements OnInit {
 
   constructor(public clasificadorService: ClasificadorService ) { }
 
-  ngOnInit(): void {
-    throw new Error("Method not implemented.");
+  ngOnInit() {
+    
   }
 
   procesar(){

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Par } from './par';
-import { Relacion } from './relacion';
+import { Par } from './clasificador/par';
+import { Relacion } from './clasificador/relacion';
 
 @Injectable({
   providedIn: 'root'
