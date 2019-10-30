@@ -1,5 +1,5 @@
-Conjunto A: <input type="text">
-Conjunto B: <input type="text">
+Conjunto A: <input type="text" [(ngModel)]="conjuntoA" />
+Conjunto B: <input type="text" [(ngModel)]="conjuntoB" />
 <br>
 <input type="radio" name="opciones">Posibles relaciones<br>
 <input type="radio" name="opciones">Posibles funciones<br>
@@ -8,14 +8,31 @@ Conjunto B: <input type="text">
 <input type="radio" name="opciones">Posibles funciones biyectivas<br>
 <input type="radio" name="opciones">Evaluar relación: <input type="text"><br>
 
+<button (click)="procesar()">
+  Procesar
+</button>
+
 <div>
 <table border="solid black">
-  <th>No.</th>
-  <th>Pares ordenados</th>
-  <th>Relación</th>
-  <th>Función</th>
-  <th>F. Inyectiva</th>
-  <th>F. Suprayectiva</th>
-  <th>F. Biyectiva</th>
+  <thead>
+    <th>No.</th>
+    <th>Pares ordenados</th>
+    <th>Relación</th>
+    <th>Función</th>
+    <th>F. Inyectiva</th>
+    <th>F. Suprayectiva</th>
+    <th>F. Biyectiva</th>
+  </thead>
+  <tbody>
+      <tr *ngFor="let salida of salidas; let indice = index">
+        <td>{{ indice+1 }}</td>
+        <td>{{ salida }}</td>
+        <td>Relación</td>
+        <td>Función</td>
+        <td>F. Inyectiva</td>
+        <td>F. Suprayectiva</td>
+        <td>F. Biyectiva</td>
+      </tr>
+  </tbody>
 </table>
 </div>

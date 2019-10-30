@@ -3,16 +3,18 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { ClasificadorComponent } from './clasificador/clasificador.component';
+import { ClasificadorModule } from './clasificador/clasificador.module';
+
+
 
 @NgModule({
   declarations: [
-    AppComponent,
-    ClasificadorComponent
+    AppComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    ClasificadorModule
   ],
   providers: [],
   bootstrap: [AppComponent]
