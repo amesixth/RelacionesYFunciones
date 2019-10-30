@@ -3,25 +3,28 @@ import { ClasificadorService } from './clasificador.service';
 import { Relacion } from './relacion';
 import { Par } from './par';
 
+
 @Component({
   selector: 'app-clasificador',
   templateUrl: './clasificador.component.html',
   styleUrls: ['./clasificador.component.css']
 })
 export class ClasificadorComponent implements OnInit {
+  
 
   @Input() conjuntoA: string;
   @Input() conjuntoB: string;
 
   salidas: string[];
 
-  constructor(public clasificador: ClasificadorService ) { }
+  constructor(public clasificadorService: ClasificadorService ) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
+    throw new Error("Method not implemented.");
   }
 
   procesar(){
-    this.salidas = this.relacionSalida(this.clasificador.obtenerRelaciones(this.conjuntoA, this.conjuntoB));
+    this.salidas = this.relacionSalida(this.clasificadorService.obtenerRelaciones(this.conjuntoA, this.conjuntoB));
   }
 
   relacionSalida(relaciones: Relacion[]): string[]{
