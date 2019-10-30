@@ -11,11 +11,20 @@ import { Par } from './par';
 })
 export class ClasificadorComponent implements OnInit {
   
-
   @Input() conjuntoA: string;
   @Input() conjuntoB: string;
 
-  salidas: string[];
+  opcionRelaciones = "r";
+  opcionFunciones = "f";
+  opcionInyectivas= "i";
+  opcionSuprayectivas= "s";
+  opcionBiyectivas= "b";
+
+  @Input() opcion: string = this.opcionRelaciones;
+
+  salidas: string[] = [];
+  esRelacion: string[] = [];
+  esFuncion: string[] = [];
 
   constructor(public clasificadorService: ClasificadorService ) { }
 
@@ -24,10 +33,29 @@ export class ClasificadorComponent implements OnInit {
   }
 
   procesar(){
-    this.salidas = this.relacionSalida(this.clasificadorService.obtenerRelaciones(this.conjuntoA, this.conjuntoB));
+    this.salidas = [];
+    this.clasificadorService.establecerConjuntos(this.conjuntoA, this.conjuntoB);
+    let conjuntoRelaciones: Relacion[] = this.clasificadorService.obtenerRelaciones();
+
+    switch (this.opcion) {
+      case this.opcionRelaciones:
+          this.salidas = this.relacionesSalida(conjuntoRelaciones);
+          this.esRelacion = this.convertirBooleanString(this.clasificadorService.esRelacion);
+          this.esFuncion = this.convertirBooleanString(this.clasificadorService.esFuncion);
+        break;
+      case this.opcionFunciones:
+          let conjuntoFunciones: Relacion[] = this.clasificadorService.obtenerFunciones(conjuntoRelaciones);
+          this.salidas = this.relacionesSalida(conjuntoFunciones);
+          this.esRelacion = this.convertirBooleanString(this.clasificadorService.esFuncion);
+          this.esFuncion = this.convertirBooleanString(this.clasificadorService.esFuncion);
+        break;
+      default:
+        break;
+    }
+    
   }
 
-  relacionSalida(relaciones: Relacion[]): string[]{
+  relacionesSalida(relaciones: Relacion[]): string[]{
     let salidas: string[] = [];
 
     for (let i = 0; i < relaciones.length; i++) {
@@ -48,6 +76,27 @@ export class ClasificadorComponent implements OnInit {
     }
 
     return salidas;
+  }
+
+  convertirBooleanString(validaciones: boolean[]): string[]{
+    let afirmaciones: string[] = [];
+    validaciones.forEach(elemento => {
+      if(elemento){
+        afirmaciones.push("Sí");
+      }
+      else{
+        afirmaciones.push("No");
+      }
+    });
+    return afirmaciones;
+  }
+
+  haySolucion(){
+    return (this.salidas.length > 0);
+  }
+
+  sinConjuntos(){
+    return !this.conjuntoA || !this.conjuntoB;
   }
 
 }

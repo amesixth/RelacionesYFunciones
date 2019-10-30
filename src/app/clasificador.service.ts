@@ -1,18 +1,20 @@
 import { Injectable } from '@angular/core';
 import { Par } from './clasificador/par';
 import { Relacion } from './clasificador/relacion';
+import { ConstantPool } from '@angular/compiler';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ClasificadorService {
+  
   dominio: string[];
   codominio: string[];
 
-  producto: Par[] = [];
-  potencia: Relacion[];
-  
-  constructor() { }
+  esRelacion: boolean[] = [];
+  esFuncion: boolean[] = [];
+
+  constructor() {}
 
   convertirEntradaArreglo(entrada: string): string[]{
     return entrada.split(",");
@@ -35,7 +37,7 @@ export class ClasificadorService {
     let relaciones: Relacion[];
     
     const tamPotencia = Math.pow(2,conjunto.length);
-    relaciones = this.inicializarRelaciones(relaciones,tamPotencia);
+    relaciones = this.inicializarRelaciones();
 
     for (let i = 0; i < tamPotencia; i++) {
       let subConjunto: Par[] = [];
@@ -46,21 +48,74 @@ export class ClasificadorService {
       }
       let relacion: Relacion = { pares : subConjunto};
       relaciones.push(relacion);
+      this.esRelacion.push(true);
     }
     relaciones = relaciones.slice(1);
     return relaciones;
   }
 
-  inicializarRelaciones(relaciones: Relacion[], cantidad: number): Relacion[]{
+  inicializarRelaciones(): Relacion[]{
     let relacionesIni: Relacion[] = [];
     let relacion: Relacion = { pares : []}
     relacionesIni.push(relacion);
     return relacionesIni;  
   }
 
-  obtenerRelaciones(entrada1: string, entrada2: string): Relacion[]{
-    this.dominio = this.convertirEntradaArreglo(entrada1);
-    this.codominio = this.convertirEntradaArreglo(entrada2);
-    return this.conjuntoPotencia(this.productoCartesiano(this.dominio, this.codominio));
+  obtenerRelaciones(): Relacion[]{
+    let relaciones: Relacion[] = this.conjuntoPotencia(this.productoCartesiano(this.dominio, this.codominio));
+    this.esFuncion = this.marcarFunciones(relaciones);
+    return relaciones;
+  }
+
+  marcarFunciones(potencia: Relacion[]): boolean[]{
+    let funciones: boolean[] = [];
+    
+    potencia.forEach(elemento => {
+     
+      if (elemento.pares.length === this.dominio.length) {
+        let dominio: string[] = [];
+        let esFuncion: boolean = true;
+        elemento.pares.forEach(par => {
+          if(this.esDuplicado(dominio,par.dominio)){
+            esFuncion = false;
+          }
+          dominio.push(par.dominio);
+        });
+        funciones.push(esFuncion);
+      }
+      else{
+        funciones.push(false);
+      }
+    });
+
+    return funciones;
+  }
+
+  obtenerFunciones(relaciones: Relacion[]): Relacion[]{
+    let funciones: Relacion[] = [];
+    let esFuncion:boolean[] = [];
+    for (let index = 0; index < relaciones.length; index++) {
+      if(this.esFuncion[index]){
+        funciones.push(relaciones[index]);
+        esFuncion.push(true);
+      }
+    }
+    this.esFuncion = esFuncion;
+    return funciones;
+  }
+
+  esDuplicado(cadena: string[], valor: string): boolean{
+    let resultado:boolean = false;
+    cadena.forEach(elemento => {
+      if(elemento === valor){
+        resultado = true;
+      }
+    });
+    return resultado;
+  }
+
+  establecerConjuntos(conjuntoA: string, conjuntoB: string){
+    this.dominio = this.convertirEntradaArreglo(conjuntoA);
+    this.codominio = this.convertirEntradaArreglo(conjuntoB);
   }
 }

@@ -1,18 +1,18 @@
 Conjunto A: <input type="text" [(ngModel)]="conjuntoA" />
 Conjunto B: <input type="text" [(ngModel)]="conjuntoB" />
 <br>
-<input type="radio" name="opciones">Posibles relaciones<br>
-<input type="radio" name="opciones">Posibles funciones<br>
-<input type="radio" name="opciones">Posibles funciones inyectivas<br>
-<input type="radio" name="opciones">Posibles funciones suprayectivas<br>
-<input type="radio" name="opciones">Posibles funciones biyectivas<br>
-<input type="radio" name="opciones">Evaluar relación: <input type="text"><br>
+<input type="radio" [(ngModel)]="opcion" value="r">Posibles relaciones<br>
+<input type="radio" [(ngModel)]="opcion" value="f">Posibles funciones<br>
+<input type="radio" [(ngModel)]="opcion" value="i">Posibles funciones inyectivas<br>
+<input type="radio" [(ngModel)]="opcion" value="s">Posibles funciones suprayectivas<br>
+<input type="radio" [(ngModel)]="opcion" value="b">Posibles funciones biyectivas<br>
+<input type="radio" [(ngModel)]="opcion" value="e">Evaluar relación: <input type="text"><br>
 
-<button (click)="procesar()">
+<button (click)="procesar()" [disabled]="sinConjuntos()">
   Procesar
 </button>
 
-<div>
+<div *ngIf="haySolucion()"> 
 <table border="solid black">
   <thead>
     <th>No.</th>
@@ -27,8 +27,8 @@ Conjunto B: <input type="text" [(ngModel)]="conjuntoB" />
       <tr *ngFor="let salida of salidas; let indice = index">
         <td>{{ indice+1 }}</td>
         <td>{{ salida }}</td>
-        <td>Relación</td>
-        <td>Función</td>
+        <td>{{ esRelacion[indice] }}</td>
+        <td>{{ esFuncion[indice] }}</td>
         <td>F. Inyectiva</td>
         <td>F. Suprayectiva</td>
         <td>F. Biyectiva</td>
