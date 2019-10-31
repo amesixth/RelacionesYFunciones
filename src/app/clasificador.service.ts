@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Par } from './clasificador/par';
 import { Relacion } from './clasificador/relacion';
-import { ConstantPool } from '@angular/compiler';
 
 @Injectable({
   providedIn: 'root'
@@ -13,11 +12,22 @@ export class ClasificadorService {
 
   esRelacion: boolean[] = [];
   esFuncion: boolean[] = [];
+  esInyectiva: boolean[] = [];
 
   constructor() {}
 
   convertirEntradaArreglo(entrada: string): string[]{
-    return entrada.split(",");
+    let conjunto: string[] = entrada.split(",");
+    let resultado: string[] = [];
+
+    let index = 0;
+    while (index < conjunto.length) {
+      if (!this.esDuplicado(conjunto.slice(index+1), conjunto[index])) { 
+        resultado.push(conjunto[index]);
+      }
+      index++;
+    }
+    return resultado;
   }
 
   productoCartesiano(dominio: string[], codominio: string[]): Par[]{
@@ -64,6 +74,7 @@ export class ClasificadorService {
   obtenerRelaciones(): Relacion[]{
     let relaciones: Relacion[] = this.conjuntoPotencia(this.productoCartesiano(this.dominio, this.codominio));
     this.esFuncion = this.marcarFunciones(relaciones);
+    this.esInyectiva = this.marcarFuncionesInyectivas(relaciones);
     return relaciones;
   }
 
@@ -91,17 +102,29 @@ export class ClasificadorService {
     return funciones;
   }
 
-  obtenerFunciones(relaciones: Relacion[]): Relacion[]{
-    let funciones: Relacion[] = [];
-    let esFuncion:boolean[] = [];
-    for (let index = 0; index < relaciones.length; index++) {
+  marcarFuncionesInyectivas(potencia: Relacion[]): boolean[]{
+    let funcionesInyectivas: boolean[] = [];
+
+    for (let index = 0; index < potencia.length; index++) {
       if(this.esFuncion[index]){
-        funciones.push(relaciones[index]);
-        esFuncion.push(true);
+        const elemento = potencia[index];
+        let codominio: string[] = [];
+        let esInyectiva: boolean = true;
+        for (let j = 0; j < elemento.pares.length; j++) {
+          const par = elemento.pares[j];
+          if(this.esDuplicado(codominio,par.codominio)){
+            esInyectiva = false;
+          }
+          codominio.push(par.codominio);
+        }
+        funcionesInyectivas.push(esInyectiva);
+      }
+      else{
+        funcionesInyectivas.push(false);
       }
     }
-    this.esFuncion = esFuncion;
-    return funciones;
+
+    return funcionesInyectivas;
   }
 
   esDuplicado(cadena: string[], valor: string): boolean{

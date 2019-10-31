@@ -23,8 +23,10 @@ export class ClasificadorComponent implements OnInit {
   @Input() opcion: string = this.opcionRelaciones;
 
   salidas: string[] = [];
+
   esRelacion: string[] = [];
   esFuncion: string[] = [];
+  esInyectiva: string[] = [];
 
   constructor(public clasificadorService: ClasificadorService ) { }
 
@@ -39,56 +41,65 @@ export class ClasificadorComponent implements OnInit {
 
     switch (this.opcion) {
       case this.opcionRelaciones:
-          this.salidas = this.relacionesSalida(conjuntoRelaciones);
-          this.esRelacion = this.convertirBooleanString(this.clasificadorService.esRelacion);
-          this.esFuncion = this.convertirBooleanString(this.clasificadorService.esFuncion);
+          this.salidas = this.relacionesSalida(conjuntoRelaciones,this.clasificadorService.esRelacion);
         break;
       case this.opcionFunciones:
-          let conjuntoFunciones: Relacion[] = this.clasificadorService.obtenerFunciones(conjuntoRelaciones);
-          this.salidas = this.relacionesSalida(conjuntoFunciones);
-          this.esRelacion = this.convertirBooleanString(this.clasificadorService.esFuncion);
-          this.esFuncion = this.convertirBooleanString(this.clasificadorService.esFuncion);
+          this.salidas = this.relacionesSalida(conjuntoRelaciones,this.clasificadorService.esFuncion);
         break;
+      case this.opcionInyectivas:
+          this.salidas = this.relacionesSalida(conjuntoRelaciones,this.clasificadorService.esInyectiva);
       default:
         break;
     }
     
   }
 
-  relacionesSalida(relaciones: Relacion[]): string[]{
+  relacionesSalida(relaciones: Relacion[], caracteristica:boolean[]): string[]{
     let salidas: string[] = [];
+    this.inicializarCaracteristicas();
 
-    for (let i = 0; i < relaciones.length; i++) {
-      let salida = "{";
-      const relacion: Relacion = relaciones[i];
-      if (relacion.pares.length === 0) {
-        salida += "( ),";
-      }
-      else{
-        for (let j = 0; j < relacion.pares.length; j++) {
-          const par: Par = relacion.pares[j];
-          salida += "("+par.dominio+","+par.codominio+"),";
+    for (let i = 0; i < relaciones.length; i++) {  
+      if (caracteristica[i]) {
+        let salida = "{";
+        const relacion: Relacion = relaciones[i];
+        if (relacion.pares.length === 0) {
+          salida += "( ),";
         }
+        else{
+          for (let j = 0; j < relacion.pares.length; j++) {
+            const par: Par = relacion.pares[j];
+            salida += "("+par.dominio+","+par.codominio+"),";
+          }
+        }
+        salida = salida.slice(0,-1);
+        salida += "}";
+        salidas.push(salida);
+        this.establecerCaracteristicas(i);
       }
-      salida = salida.slice(0,-1);
-      salida += "}";
-      salidas.push(salida);
     }
-
     return salidas;
+
   }
 
-  convertirBooleanString(validaciones: boolean[]): string[]{
-    let afirmaciones: string[] = [];
-    validaciones.forEach(elemento => {
-      if(elemento){
-        afirmaciones.push("Sí");
-      }
-      else{
-        afirmaciones.push("No");
-      }
-    });
-    return afirmaciones;
+  inicializarCaracteristicas(){
+    this.esRelacion = [];
+    this.esFuncion = [];
+    this.esInyectiva = [];
+  }
+  establecerCaracteristicas(indice: number){
+    this.esRelacion.push(this.convertirBooleanString(this.clasificadorService.esRelacion[indice]));
+    this.esFuncion.push(this.convertirBooleanString(this.clasificadorService.esFuncion[indice]));
+    this.esInyectiva.push(this.convertirBooleanString(this.clasificadorService.esInyectiva[indice]));
+  }
+
+  convertirBooleanString(validacion: boolean): string{
+    let respuesta: string = "";
+    if (validacion) {
+      respuesta = "Sí";
+    } else {
+      respuesta =  "No";
+    }
+    return respuesta;
   }
 
   haySolucion(){
