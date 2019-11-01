@@ -19,7 +19,7 @@ export class ClasificadorService {
   constructor() {}
 
   convertirEntradaArreglo(entrada: string): string[]{
-    let conjunto: string[] = entrada.split(",");
+    let conjunto: string[] = entrada.replace(/\s* /g,"").split(",");
     let resultado: string[] = [];
 
     let index = 0;

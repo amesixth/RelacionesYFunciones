@@ -59,7 +59,7 @@ export class ClasificadorComponent implements OnInit {
         this.salidas = this.relacionesSalida(conjuntoRelaciones,this.clasificadorService.esBiyectiva);
         break;
       case this.opcionEvaluar:
-        this.salidas.push(this.evaluarExpresion(this.relacionesSalida(conjuntoRelaciones,this.clasificadorService.esRelacion), this.expresionAEvaluar));
+        this.salidas.push("{"+this.evaluarExpresion(this.relacionesSalida(conjuntoRelaciones,this.clasificadorService.esRelacion), this.expresionAEvaluar)+"}");
         break;
       default:
         break;
@@ -67,14 +67,13 @@ export class ClasificadorComponent implements OnInit {
   }
 
   evaluarExpresion(relaciones: string[], expresionAEvaluar: string): string{
+    let expresionSinEspacios: string = expresionAEvaluar.replace(/\s* /g,"");
     this.inicializarCaracteristicas();
     for (let i = 0; i < relaciones.length; i++) {
       let auxRelacion:string = relaciones[i].slice(1,relaciones[i].length-1);
-      console.log(auxRelacion);
-      console.log(expresionAEvaluar);
-      if(auxRelacion==expresionAEvaluar){
+      if(auxRelacion==expresionSinEspacios){
         this.establecerCaracteristicas(i);
-        return expresionAEvaluar;
+        return expresionSinEspacios;
       }
     }
     this.esRelacion.push("No");
@@ -82,7 +81,7 @@ export class ClasificadorComponent implements OnInit {
     this.esInyectiva.push("No");
     this.esSuprayectiva.push("No");
     this.esBiyectiva.push("No");
-    return expresionAEvaluar;
+    return expresionSinEspacios;
   }
 
   relacionesSalida(relaciones: Relacion[], caracteristica:boolean[]): string[]{
@@ -143,6 +142,10 @@ export class ClasificadorComponent implements OnInit {
 
   sinConjuntos(){
     return !this.conjuntoA || !this.conjuntoB;
+  }
+
+  habilitarEvaluacion(){
+    return !(this.opcion === 'e');
   }
 
 }

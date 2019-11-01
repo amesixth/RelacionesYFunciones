@@ -12,13 +12,15 @@ Conjunto B: <input type="text" [(ngModel)]="conjuntoB" />
 <input type="radio" [(ngModel)]="opcion" value="i">Posibles funciones inyectivas<br>
 <input type="radio" [(ngModel)]="opcion" value="s">Posibles funciones suprayectivas<br>
 <input type="radio" [(ngModel)]="opcion" value="b">Posibles funciones biyectivas<br>
-<input type="radio" [(ngModel)]="opcion" value="e">Evaluar relación: <input type="text" [(ngModel)]="expresionAEvaluar"><br>
+<input type="radio" [(ngModel)]="opcion" value="e">Evaluar relación: <input type="text" [(ngModel)]="expresionAEvaluar" [disabled]="habilitarEvaluacion()"><br>
 
 <button (click)="procesar()" [disabled]="sinConjuntos()">
   Procesar
 </button>
 </div>
-
+<div *ngIf="!haySolucion()"> 
+  Sin resultados
+</div>
 <div *ngIf="haySolucion()"> 
 <table border="solid black">
   <thead>
