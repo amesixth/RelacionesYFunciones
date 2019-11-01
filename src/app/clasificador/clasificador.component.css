@@ -1,0 +1,43 @@
+*{
+	font-family: 'Trebuchet MS', Helvetica, sans-serif;
+}
+i{
+	font-size: 12px;
+}
+.header{
+	padding: 5px;
+	text-align: center;
+}
+#opciones{
+	padding: 10px;
+}
+.header, #opciones{
+	background-color: #9CBEFC;
+	color: black;
+	border-color: blue;
+	border-radius: 5px;
+	margin-bottom: 15px;
+	margin-left: 15px;
+	margin-right: 15px;
+}
+
+table{
+    border: solid 1px gray;
+    border-collapse: collapse;
+    padding: 5px;
+    border-radius: 20px;
+    margin: 3px;
+	text-align: center;
+}
+
+th{
+	padding: 8px;
+	background: #73A3EA;
+    color: black;
+}
+
+td {    
+	padding: 8px;     
+	background: #fff;     
+    color: black;    
+}

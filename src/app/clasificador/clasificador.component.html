@@ -1,3 +1,9 @@
+<div class="header">
+    <h1>Relaciones y funciones</h1>
+    <i>Hernán Guillermo Dulcey Morán</i><br> 
+    <i>Karla Jacquelin Guzmán Sánchez</i>
+</div>
+<div id="opciones">
 Conjunto A: <input type="text" [(ngModel)]="conjuntoA" />
 Conjunto B: <input type="text" [(ngModel)]="conjuntoB" />
 <br>
@@ -6,11 +12,12 @@ Conjunto B: <input type="text" [(ngModel)]="conjuntoB" />
 <input type="radio" [(ngModel)]="opcion" value="i">Posibles funciones inyectivas<br>
 <input type="radio" [(ngModel)]="opcion" value="s">Posibles funciones suprayectivas<br>
 <input type="radio" [(ngModel)]="opcion" value="b">Posibles funciones biyectivas<br>
-<input type="radio" [(ngModel)]="opcion" value="e">Evaluar relación: <input type="text"><br>
+<input type="radio" [(ngModel)]="opcion" value="e">Evaluar relación: <input type="text" [(ngModel)]="expresionAEvaluar"><br>
 
 <button (click)="procesar()" [disabled]="sinConjuntos()">
   Procesar
 </button>
+</div>
 
 <div *ngIf="haySolucion()"> 
 <table border="solid black">
@@ -30,8 +37,8 @@ Conjunto B: <input type="text" [(ngModel)]="conjuntoB" />
         <td>{{ esRelacion[indice] }}</td>
         <td>{{ esFuncion[indice] }}</td>
         <td>{{ esInyectiva[indice] }}</td>
-        <td>F. Suprayectiva</td>
-        <td>F. Biyectiva</td>
+        <td>{{ esSuprayectiva[indice] }}</td>
+        <td>{{ esBiyectiva[indice] }}</td>
       </tr>
   </tbody>
 </table>

@@ -13,6 +13,8 @@ export class ClasificadorService {
   esRelacion: boolean[] = [];
   esFuncion: boolean[] = [];
   esInyectiva: boolean[] = [];
+  esSuprayectiva: boolean[] = [];
+  esBiyectiva: boolean[] = [];
 
   constructor() {}
 
@@ -75,6 +77,8 @@ export class ClasificadorService {
     let relaciones: Relacion[] = this.conjuntoPotencia(this.productoCartesiano(this.dominio, this.codominio));
     this.esFuncion = this.marcarFunciones(relaciones);
     this.esInyectiva = this.marcarFuncionesInyectivas(relaciones);
+    this.esSuprayectiva = this.marcarFuncionesSuprayectiva(relaciones, this.esFuncion);
+    this.esBiyectiva = this.marcarFuncionesBiyectivas(relaciones, this.esInyectiva, this. esSuprayectiva);
     return relaciones;
   }
 
@@ -125,6 +129,52 @@ export class ClasificadorService {
     }
 
     return funcionesInyectivas;
+  }
+
+  verifica(vector: boolean[]): boolean{
+    let resultado: boolean = true;
+    vector.forEach(elemento => {
+      if(!elemento){
+        resultado = false;
+      }
+    });
+    return resultado;
+  }
+
+  marcarFuncionesSuprayectiva(relaciones: Relacion[], funciones: boolean[]): boolean[]{
+    //Todas las relaciones
+    for (let i = 0; i < relaciones.length; i++) {
+      //Si es una función, entonces verifica
+      if(funciones[i]){
+        let aux: boolean[] = [];//this.initAux(this.codominio.length);
+        for(let i=0;i<this.codominio.length;i++){
+          aux.push(false);
+        }
+        for (let j = 0; j < relaciones[i].pares.length; j++) {
+          for(let k = 0; k < this.codominio.length; k++){
+            if(relaciones[i].pares[j].codominio == this.codominio[k]){
+              aux[k] = true;
+            }
+          }
+        }
+        this.esSuprayectiva[i] = this.verifica(aux);
+      }else{
+        this.esSuprayectiva[i] = false;
+      }
+    }
+    return this.esSuprayectiva;
+  }
+
+  marcarFuncionesBiyectivas(relaciones: Relacion[], esInyectiva: boolean[], esSuprayectiva: boolean[]): boolean[]{
+    let biyectivas: boolean[] = [];
+    for (let i = 0; i < relaciones.length; i++) {
+      if(esInyectiva[i] && esSuprayectiva[i]){
+        biyectivas.push(true);
+      }else{
+        biyectivas.push(false);
+      }
+    }
+    return biyectivas;
   }
 
   esDuplicado(cadena: string[], valor: string): boolean{

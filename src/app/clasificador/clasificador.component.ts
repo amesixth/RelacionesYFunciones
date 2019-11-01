@@ -19,20 +19,23 @@ export class ClasificadorComponent implements OnInit {
   opcionInyectivas= "i";
   opcionSuprayectivas= "s";
   opcionBiyectivas= "b";
+  opcionEvaluar = "e";
 
   @Input() opcion: string = this.opcionRelaciones;
+
+  @Input() expresionAEvaluar: string;
 
   salidas: string[] = [];
 
   esRelacion: string[] = [];
   esFuncion: string[] = [];
   esInyectiva: string[] = [];
+  esSuprayectiva: string[] = [];
+  esBiyectiva: string[] = [];
 
   constructor(public clasificadorService: ClasificadorService ) { }
 
-  ngOnInit() {
-    
-  }
+  ngOnInit() {}
 
   procesar(){
     this.salidas = [];
@@ -41,17 +44,45 @@ export class ClasificadorComponent implements OnInit {
 
     switch (this.opcion) {
       case this.opcionRelaciones:
-          this.salidas = this.relacionesSalida(conjuntoRelaciones,this.clasificadorService.esRelacion);
+        this.salidas = this.relacionesSalida(conjuntoRelaciones,this.clasificadorService.esRelacion);
         break;
       case this.opcionFunciones:
-          this.salidas = this.relacionesSalida(conjuntoRelaciones,this.clasificadorService.esFuncion);
+        this.salidas = this.relacionesSalida(conjuntoRelaciones,this.clasificadorService.esFuncion);
         break;
       case this.opcionInyectivas:
-          this.salidas = this.relacionesSalida(conjuntoRelaciones,this.clasificadorService.esInyectiva);
+        this.salidas = this.relacionesSalida(conjuntoRelaciones,this.clasificadorService.esInyectiva);
+        break;
+      case this.opcionSuprayectivas:
+        this.salidas = this.relacionesSalida(conjuntoRelaciones,this.clasificadorService.esSuprayectiva);
+        break;
+      case this.opcionBiyectivas:
+        this.salidas = this.relacionesSalida(conjuntoRelaciones,this.clasificadorService.esBiyectiva);
+        break;
+      case this.opcionEvaluar:
+        this.salidas.push(this.evaluarExpresion(this.relacionesSalida(conjuntoRelaciones,this.clasificadorService.esRelacion), this.expresionAEvaluar));
+        break;
       default:
         break;
     }
-    
+  }
+
+  evaluarExpresion(relaciones: string[], expresionAEvaluar: string): string{
+    this.inicializarCaracteristicas();
+    for (let i = 0; i < relaciones.length; i++) {
+      let auxRelacion:string = relaciones[i].slice(1,relaciones[i].length-1);
+      console.log(auxRelacion);
+      console.log(expresionAEvaluar);
+      if(auxRelacion==expresionAEvaluar){
+        this.establecerCaracteristicas(i);
+        return expresionAEvaluar;
+      }
+    }
+    this.esRelacion.push("No");
+    this.esFuncion.push("No");
+    this.esInyectiva.push("No");
+    this.esSuprayectiva.push("No");
+    this.esBiyectiva.push("No");
+    return expresionAEvaluar;
   }
 
   relacionesSalida(relaciones: Relacion[], caracteristica:boolean[]): string[]{
@@ -85,11 +116,15 @@ export class ClasificadorComponent implements OnInit {
     this.esRelacion = [];
     this.esFuncion = [];
     this.esInyectiva = [];
+    this.esSuprayectiva = [];
+    this.esBiyectiva = [];
   }
   establecerCaracteristicas(indice: number){
     this.esRelacion.push(this.convertirBooleanString(this.clasificadorService.esRelacion[indice]));
     this.esFuncion.push(this.convertirBooleanString(this.clasificadorService.esFuncion[indice]));
     this.esInyectiva.push(this.convertirBooleanString(this.clasificadorService.esInyectiva[indice]));
+    this.esSuprayectiva.push(this.convertirBooleanString(this.clasificadorService.esSuprayectiva[indice]));
+    this.esBiyectiva.push(this.convertirBooleanString(this.clasificadorService.esBiyectiva[indice]));
   }
 
   convertirBooleanString(validacion: boolean): string{
