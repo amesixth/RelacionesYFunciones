@@ -118,8 +118,13 @@
               "devServerTarget": "RelacionesYFunciones:serve:production"
             }
           }
+        },
+        "deploy": {
+          "builder": "@angular/fire:deploy",
+          "options": {}
         }
       }
-    }},
+    }
+  },
   "defaultProject": "RelacionesYFunciones"
 }

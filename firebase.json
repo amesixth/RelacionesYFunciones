@@ -1,0 +1,19 @@
+{
+  "hosting": [
+    {
+      "target": "RelacionesYFunciones",
+      "public": "dist/RelacionesYFunciones",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "rewrites": [
+        {
+          "source": "**",
+          "destination": "/index.html"
+        }
+      ]
+    }
+  ]
+}

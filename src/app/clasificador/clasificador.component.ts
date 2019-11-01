@@ -67,13 +67,30 @@ export class ClasificadorComponent implements OnInit {
   }
 
   evaluarExpresion(relaciones: string[], expresionAEvaluar: string): string{
-    let expresionSinEspacios: string = expresionAEvaluar.replace(/\s* /g,"");
+
+    let expresionSinEspacios: string = expresionAEvaluar.replace(/\s*/g,"");
+    let nuevaExpresion: string[] = expresionSinEspacios.replace(/\)\,\(/g,");_;(").split(";_;");
+
     this.inicializarCaracteristicas();
     for (let i = 0; i < relaciones.length; i++) {
-      let auxRelacion:string = relaciones[i].slice(1,relaciones[i].length-1);
-      if(auxRelacion==expresionSinEspacios){
-        this.establecerCaracteristicas(i);
-        return expresionSinEspacios;
+      let auxRelacion: string = relaciones[i].slice(1,relaciones[i].length-1);
+
+      if(expresionAEvaluar.length == auxRelacion.length){
+        let auxRelaciones: string[] = auxRelacion.replace(/\)\,\(/g,");_;(").split(";_;");
+        let coincidencias: number = 0;
+        for (let j = 0; j < auxRelaciones.length; j++) {
+          for(let k = 0; k < nuevaExpresion.length; k++){
+            if(auxRelaciones[j] === nuevaExpresion[k]){
+              coincidencias++;
+              break;
+            }
+          }
+        }
+
+        if(auxRelaciones.length==coincidencias){
+          this.establecerCaracteristicas(i);
+          return expresionSinEspacios;
+        }
       }
     }
     this.esRelacion.push("No");
@@ -93,7 +110,7 @@ export class ClasificadorComponent implements OnInit {
         let salida = "{";
         const relacion: Relacion = relaciones[i];
         if (relacion.pares.length === 0) {
-          salida += "( ),";
+          salida += " ,";
         }
         else{
           for (let j = 0; j < relacion.pares.length; j++) {
