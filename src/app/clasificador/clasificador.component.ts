@@ -71,12 +71,15 @@ export class ClasificadorComponent implements OnInit {
     let expresionSinEspacios: string = expresionAEvaluar.replace(/\s*/g,"");
     let nuevaExpresion: string[] = expresionSinEspacios.replace(/\)\,\(/g,");_;(").split(";_;");
 
+    nuevaExpresion = this.eliminarDuplicados(nuevaExpresion);
+    console.log(nuevaExpresion);
+
     this.inicializarCaracteristicas();
     for (let i = 0; i < relaciones.length; i++) {
       let auxRelacion: string = relaciones[i].slice(1,relaciones[i].length-1);
 
-      if(expresionAEvaluar.length == auxRelacion.length){
-        let auxRelaciones: string[] = auxRelacion.replace(/\)\,\(/g,");_;(").split(";_;");
+      let auxRelaciones: string[] = auxRelacion.replace(/\)\,\(/g,");_;(").split(";_;");
+      if(nuevaExpresion.length == auxRelaciones.length){
         let coincidencias: number = 0;
         for (let j = 0; j < auxRelaciones.length; j++) {
           for(let k = 0; k < nuevaExpresion.length; k++){
@@ -99,6 +102,19 @@ export class ClasificadorComponent implements OnInit {
     this.esSuprayectiva.push("No");
     this.esBiyectiva.push("No");
     return expresionSinEspacios;
+  }
+
+  eliminarDuplicados(expresion: string[]): string[]{
+    let resultado: string[] = [];
+
+    let index = 0;
+    while (index < expresion.length) {
+      if (!this.clasificadorService.esDuplicado(expresion.slice(index+1), expresion[index])) { 
+        resultado.push(expresion[index]);
+      }
+      index++;
+    }
+    return resultado;
   }
 
   relacionesSalida(relaciones: Relacion[], caracteristica:boolean[]): string[]{
